@@ -1,11 +1,9 @@
 import React from 'react';
 
-const Ans = () => {
-  return (
-    <div>
-      <img src/>
-    </div>
-  )
-}
+const Ans = () => (
+  <div>
+    <img alt="" src="#" />
+  </div>
+);
 
 export default Ans;

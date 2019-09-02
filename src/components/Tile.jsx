@@ -1,7 +1,5 @@
 import React from 'react';
 
-const Tile = () => {
-  return <button>11111</button>;
-}
+const Tile = () => <button type="button">11111</button>;
 
 export default Tile;
