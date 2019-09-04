@@ -6,7 +6,7 @@
   "scripts": {
     "build": "webpack --mode production",
     "start": "webpack-dev-server --mode development --open",
-    "lint": "eslint ./src/components/Gamebox.jsx",
+    "lint": "eslint ./src/components/Game.jsx",
     "test": "echo \"Error: no test specified\" && exit 1",
     "deploy": "gh-pages -d dist"
   },

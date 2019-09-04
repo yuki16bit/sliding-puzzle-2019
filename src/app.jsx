@@ -3,12 +3,12 @@ import ReactDOM from 'react-dom';
 
 import './App.scss';
 
-import Gamebox from './components/Gamebox';
+import Game from './components/Game';
 
 const App = () => (
   <div>
     <h3>Hello React!!</h3>
-    <Gamebox />
+    <Game />
   </div>
 );
 

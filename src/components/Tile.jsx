@@ -1,5 +1,11 @@
 import React from 'react';
 
-const Tile = () => <button type="button">11111</button>;
+const Tile = ({ text, onTileClick }) => {
+  return(
+  <div className="Tile" onClick={onTileClick}>
+    <p>{text}</p>
+  </div>
+  );
+}
 
 export default Tile;
