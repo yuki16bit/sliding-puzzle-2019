@@ -3,11 +3,8 @@
     "browser": true,
     "es6": true
   },
-  "extends": "airbnb",
-  "globals": {
-    // "Atomics": "readonly",
-    // "SharedArrayBuffer": "readonly"
-  },
+  "extends": ["airbnb", "plugin:prettier/recommended", "prettier/react"],
+  "globals": {},
   "parser": "babel-eslint",
   "parserOptions": {
     "ecmaFeatures": {
@@ -17,10 +14,18 @@
     "sourceType": "module"
   },
   "plugins": [
-    "react"
+    "react", "prettier"
   ],
   "rules": {
     "react/state-in-constructor": "off",
-    "no-console":"off"
+    "no-console":"off",
+    "prettier/prettier": "error",
+    "react/destructuring-assignment": [
+      "error",
+      "always",
+      {
+        "ignoreClassFields": true
+      }
+    ]
   }
 }

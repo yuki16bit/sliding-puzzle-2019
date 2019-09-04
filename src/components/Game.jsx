@@ -7,13 +7,13 @@ class Game extends Component {
   state = {
     // quiz: 'https://source.unsplash.com/900x900/?cat,japan',
     player: {
-      name: "",
-      step: 0
+      name: '',
+      step: 0,
     },
     box: {
       row: 3,
-      col: 3
-    }
+      col: 3,
+    },
   };
 
   render() {
@@ -25,7 +25,7 @@ class Game extends Component {
           <Info />
           <p>名字、步數 {player.name + player.step}</p>
         </div>
-        <Tiles row={box.row} col={box.col}/>
+        <Tiles row={box.row} col={box.col} />
       </div>
     );
   }
