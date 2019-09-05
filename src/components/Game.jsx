@@ -53,7 +53,7 @@ class Game extends Component {
       <div className="Game">
         <div className="Game-info">
           <Info />
-          <Info />
+          <Info step={player.step}/>
           <p>名字、步數 {player.name + player.step}</p>
         </div>
         <Tiles
