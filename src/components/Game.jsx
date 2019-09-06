@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
 
+// UI
+import Popup from './handmade/Popup';
+
+// Logic
 import Info from './Info';
 import Tiles from './Tiles';
 import Start from './Start';
@@ -66,7 +70,14 @@ class Game extends Component {
     // 檢查有無名字，有才能玩，沒有要跳 Popup 提醒
     // isStart 變 true，Start 要變 ReStart，遊戲進行中不可亂改名，所以 input 鎖起來
     // 出新題目 + shuffle 磁磚們
+    this.setState({
+      quiz: this.makeQuiz()
+    })
     console.log('Start Clicked!')
+  }
+
+  makeQuiz() {
+    return 'https://source.unsplash.com/900x900/?cat,japan'
   }
 
   shuffle () {
@@ -91,6 +102,7 @@ class Game extends Component {
           onTileClick={this.onTileClick}
         />
         <Start onStartClick={this.onStartClick}/>
+        <Popup noticeMsg="喔喔喔"/>
       </div>
     );
   }
