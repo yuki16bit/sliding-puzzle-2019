@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import Tile from './Tile';
 
 const Tiles = ({ list, onTileClick }) => (
-  <div>
+  <div className="tiles">
     {list.map((m, i) => {
       let text = i+1;
       return <Tile key={i} text={text.toString()} onTileClick={onTileClick} />;

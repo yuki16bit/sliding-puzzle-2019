@@ -7,7 +7,7 @@ import Game from './components/Game';
 
 const App = () => (
   <div>
-    <h3>Hello React!!</h3>
+    <h3>Hello</h3>
     <Game />
   </div>
 );

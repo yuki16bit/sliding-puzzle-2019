@@ -1,11 +1,38 @@
-$navy: #001e38;
-$green: #15b78f;
+$retroPink: #ee7879;
+$retroNavy: #2a3166;
+$retroBlush: #f4abaa;
+$retroMint: #cae7df;
 
 html {
-  background-color: $navy;
+  background-color: whitesmoke;
 }
 
-.Tile {
-  border: 1px white solid;
+.tiles {
+  width: 300px;
+  height: 300px;
+  display: flex;
+  flex-flow: row wrap;
+  border: 1px $retroNavy solid;
+}
+
+.tile {
+  flex: 1 1 100px;
+  border: 1px $retroNavy solid;
   cursor: pointer;
+}
+
+.info {
+  .info-quiz {
+    width: 80px;
+  
+    img {
+      width: 100%;
+    }
+  }
+}
+
+.start {
+  .start-btn {
+    border: 1px $retroPink solid;
+  }
 }
