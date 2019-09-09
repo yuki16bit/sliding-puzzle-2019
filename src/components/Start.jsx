@@ -1,14 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const Start = ({onStartClick}) => (
+const Start = ({ isStart, onStartClick }) => (
   <div className="start">
-    <button type="button" className="start-btn" onClick={onStartClick}>Start!</button>
+    <button type="button" className="start-btn" onClick={onStartClick}>
+      {isStart ? 'ReStart!' : 'Start!'}
+    </button>
   </div>
 );
 
 Start.propTypes = {
-  // list: PropTypes.array.isRequired,
+  isStart: PropTypes.bool.isRequired,
   onStartClick: PropTypes.func.isRequired,
 };
 

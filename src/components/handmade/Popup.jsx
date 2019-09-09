@@ -3,22 +3,21 @@ import React, { Component } from 'react';
 
 import Notice from './Notice';
 
-const Overlay = (Inner) => {
-  return (
-    class extends Component {
-      onOutsideClick (e) {
-        console.log('點到', e.target, e.currentTarget);
-      }
-      render() { 
-        return (
-          <div className="overlay" onClick={this.onOutsideClick}>
-            <Inner {...this.props} />
-          </div>
-        );
-      }
+const Overlay = Inner => {
+  return class extends Component {
+    // onOutsideClick(e) {
+    //   console.log('點到', e.target, e.currentTarget);
+    // }
+
+    render() {
+      return (
+        <button type="button" className="overlay" onClick={this.onOutsideClick}>
+          <Inner {...this.props} />
+        </button>
+      );
     }
-  )
-}
+  };
+};
 
 const Popup = Overlay(Notice);
 
