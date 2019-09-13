@@ -10,28 +10,29 @@ import Start from './Start';
 
 class Game extends Component {
   state = {
+    // Game Data
     isStart: false,
-    quiz: 'https://source.unsplash.com/900x900/?cat,japan',
-    player: {
-      name: '123',
-      step: '0',
-    },
-    boxes: {
-      row: 3,
-      col: 3,
-      size: 0,
-      list: [],
-      matrix: [],
-    },
+    isPop: false,
+    quiz: 'https://source.unsplash.com/900x900/?cat,sakura',
+
+    // Player Data
+    playerName: 'Please Enter Your Name...',
+    playerStep: '0',
+
+    // Boxes Data
+    boxesRow: 3,
+    boxesCol: 3,
+    boxesSize: 0,
+    boxesList: [],
+    boxesMatrix: [],
   };
 
   componentDidMount() {
-    const { boxes } = this.state;
-    this.getBoxes(boxes.row, boxes.col);
+    const { boxesRow, boxesCol } = this.state;
+    this.getBoxes(boxesRow, boxesCol);
   }
 
   getBoxes(row, col) {
-    const { boxes } = this.state;
     const size = row * col;
     const list = Array.from({ length: size }, (v, i) => i + 1);
 
@@ -44,16 +45,20 @@ class Game extends Component {
       twoD.push(chunk);
     }
 
-    const newBoxes = { ...boxes };
-    newBoxes.size = size;
-    newBoxes.list = list;
-    newBoxes.matrix = twoD;
-
-    this.setState({ boxes: newBoxes });
+    this.setState({
+      boxesSize: size,
+      boxesList: list,
+      boxesMatrix: twoD,
+    });
   }
 
-  onTileClick = e => {
+  clickTile = e => {
     // step ++
+    const newStep = parseInt([...this.state.playerStep], 10) + 1;
+
+    this.setState({
+      playerStep: `${newStep}`,
+    });
     // 檢查是否和挖空相鄰（用矩陣），相鄰代表可移動
     // 如可移動，就 Target 跟 挖空 換位
     // cue 換位動畫（動畫時其他地方鎖起來以防 User 連續亂按）
@@ -69,23 +74,29 @@ class Game extends Component {
     console.log('Check Solved', e);
   };
 
-  onStartClick = e => {
+  clickStart = e => {
+    const { playerName } = this.state;
+    if (!playerName || playerName === 'Please Enter Your Name...') {
+      this.setState({
+        isPop: true,
+      });
+    }
+
     // 檢查有無名字，有才能玩，沒有要跳 Popup 提醒
     // isStart 變 true，Start 要變 ReStart，遊戲進行中不可亂改名，所以 input 鎖起來
     // 出新題目 + shuffle 磁磚們
     this.setState({
       isStart: true,
-      quiz: this.makeQuiz(),
     });
     console.log('Start Clicked!', e);
   };
 
-  makeQuiz = e => {
-    console.log('Make Quiz!', e);
-    return 'https://source.unsplash.com/900x900/?cat,japan';
-  };
+  // makeQuiz = e => {
+  //   console.log('Make Quiz!', e);
+  //   return 'https://source.unsplash.com/900x900/?cat,japan,sakura';
+  // };
 
-  shuffle = e => {
+  shuffleTiles = e => {
     // 先洗牌（用 List）
     // 檢查 inversion 是基數還偶數（基數會破不了關，偶數才能破關）
     // 如果基數，List 前兩個人再換位，讓 inversion 變偶數
@@ -93,18 +104,22 @@ class Game extends Component {
     console.log('Tiles Shuffle!', e);
   };
 
+  changeName = e => {
+    this.setState({ playerName: e.target.value });
+  };
+
   render() {
-    const { player, boxes, quiz, isStart } = this.state;
+    const { isStart, isPop, quiz, playerName, playerStep, boxesList } = this.state;
     return (
-      <div className="game">
-        <div className="game-info">
-          <Info name={player.name} />
-          <Info step={player.step} />
+      <div className='game'>
+        <div className='game-info'>
+          <Info playerName={playerName} changeName={this.changeName} />
+          <Info playerStep={playerStep} />
           <Info quiz={quiz} />
         </div>
-        <Tiles list={boxes.list} onTileClick={this.onTileClick} />
-        <Start isStart={isStart} onStartClick={this.onStartClick} />
-        <Popup noticeMsg="喔喔喔111451" />
+        <Tiles boxesList={boxesList} clickTile={this.clickTile} />
+        <Start isStart={isStart} clickStart={this.clickStart} />
+        <Popup isPop={isPop} />
       </div>
     );
   }

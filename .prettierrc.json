@@ -3,5 +3,8 @@
   "trailingComma": "all",
   "tabWidth": 2,
   "semi": true,
-  "singleQuote": true
+  "singleQuote": true,
+  "proseWrap": "always",
+  "jsxSingleQuote": true,
+  "bracketSpacing": true
 }

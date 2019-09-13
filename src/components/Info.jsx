@@ -1,38 +1,40 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const Info = ({ name, step, quiz }) => (
-  <div className="info">
-    {name && (
-      <label htmlFor="name">
+const Info = ({ playerName, playerStep, quiz, changeName }) => (
+  <div className='info'>
+    {changeName && (
+      <label htmlFor='name'>
         Name:
-        <input type="text" name="name" defaultValue={name} />
+        <input type='text' name='name' placeholder={playerName} onChange={changeName} />
       </label>
     )}
-    {step && (
-      <label htmlFor="step">
+    {playerStep && (
+      <label htmlFor='step'>
         Step:
-        <input type="text" name="step" value={step} readOnly />
+        <input type='text' name='step' value={playerStep} readOnly />
       </label>
     )}
     {quiz && (
-      <div className="info-quiz">
-        <img src={quiz} alt="" />
+      <div className='info-quiz'>
+        <img src={quiz} alt='' />
       </div>
     )}
   </div>
 );
 
 Info.defaultProps = {
-  name: null,
-  step: null,
+  playerName: null,
+  playerStep: null,
   quiz: null,
+  changeName: null,
 };
 
 Info.propTypes = {
-  name: PropTypes.string,
-  step: PropTypes.string,
+  playerName: PropTypes.string,
+  playerStep: PropTypes.string,
   quiz: PropTypes.string,
+  changeName: PropTypes.func,
 };
 
 export default Info;

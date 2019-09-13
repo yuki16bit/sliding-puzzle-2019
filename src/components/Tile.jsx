@@ -1,19 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const Tile = ({ text, onTileClick }) => (
-  <button type="button" className="tile" onClick={onTileClick}>
+const Tile = ({ text, clickTile }) => (
+  <button type='button' className='tile' onClick={clickTile}>
     <p>{text}</p>
   </button>
 );
 
 Tile.defaultProps = {
   text: null,
-}
+};
 
 Tile.propTypes = {
   text: PropTypes.string,
-  onTileClick: PropTypes.func.isRequired,
+  clickTile: PropTypes.func.isRequired,
 };
 
 export default Tile;
