@@ -54,10 +54,8 @@ class Game extends Component {
 
   clickTile = e => {
     // step ++
-    const newStep = parseInt([...this.state.playerStep], 10) + 1;
-
-    this.setState({
-      playerStep: `${newStep}`,
+    this.setState(prevState => {
+      return { playerStep: `${parseInt(prevState.playerStep, 10) + 1}` };
     });
     // 檢查是否和挖空相鄰（用矩陣），相鄰代表可移動
     // 如可移動，就 Target 跟 挖空 換位
@@ -80,21 +78,23 @@ class Game extends Component {
       this.setState({
         isPop: true,
       });
+    } else {
+      this.setState({
+        isStart: true,
+      });
     }
 
     // 檢查有無名字，有才能玩，沒有要跳 Popup 提醒
     // isStart 變 true，Start 要變 ReStart，遊戲進行中不可亂改名，所以 input 鎖起來
     // 出新題目 + shuffle 磁磚們
-    this.setState({
-      isStart: true,
-    });
     console.log('Start Clicked!', e);
   };
 
-  // makeQuiz = e => {
-  //   console.log('Make Quiz!', e);
-  //   return 'https://source.unsplash.com/900x900/?cat,japan,sakura';
-  // };
+  toggleIsPop = () => {
+    this.setState(prevState => {
+      return { isPop: !prevState.isPop };
+    });
+  };
 
   shuffleTiles = e => {
     // 先洗牌（用 List）
@@ -117,9 +117,9 @@ class Game extends Component {
           <Info playerStep={playerStep} />
           <Info quiz={quiz} />
         </div>
-        <Tiles boxesList={boxesList} clickTile={this.clickTile} />
+        <Tiles isStart={isStart} boxesList={boxesList} clickTile={this.clickTile} />
         <Start isStart={isStart} clickStart={this.clickStart} />
-        <Popup isPop={isPop} />
+        <Popup isPop={isPop} toggleIsPop={this.toggleIsPop} />
       </div>
     );
   }

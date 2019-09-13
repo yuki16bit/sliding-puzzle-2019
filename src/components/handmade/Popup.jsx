@@ -7,7 +7,8 @@ const Overlay = PopType => {
   class Inner extends Component {
     clickOutside = e => {
       if (e.target.contains(this.innerRef)) {
-        console.log('點到 Overlay');
+        this.props.toggleIsPop();
+        console.log('點到 Overlay，關掉 PopUp');
       } else {
         console.log('點到 Notice');
       }
@@ -36,6 +37,7 @@ const Overlay = PopType => {
 
   Inner.propTypes = {
     isPop: PropTypes.bool.isRequired,
+    toggleIsPop: PropTypes.func.isRequired,
   };
   return Inner;
 };
