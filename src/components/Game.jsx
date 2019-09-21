@@ -33,40 +33,35 @@ class Game extends Component {
 
   componentDidMount() {
     const { boxesRow, boxesCol } = this.state;
-    this.getBoxes(boxesRow, boxesCol);
+    this.initSize(boxesRow, boxesCol);
   }
 
-  getBoxes(row, col) {
-    const size = row * col;
-    const list = Array.from({ length: size }, (v, i) => i + 1);
-
-    const oneD = [...list];
-    const twoD = [];
-    let rowNum = row > 0 ? row : 0;
-    while (rowNum && oneD.length > 0) {
-      rowNum -= 1;
-      const chunk = oneD.splice(0, col);
-      twoD.push(chunk);
+  componentDidUpdate(prevProps, prevState) {
+    const { boxesCol, boxesRow, boxesSize, boxesList } = this.state;
+    if (prevState.boxesSize !== boxesSize) {
+      this.initList(boxesSize);
+      console.log('initList');
     }
-
-    this.setState({
-      boxesSize: size,
-      boxesList: list,
-      boxesMatrix: twoD,
-    });
+    if (prevState.boxesList !== boxesList) {
+      this.initMatrix(boxesRow, boxesCol, boxesList);
+      console.log('initMatrix!');
+    }
   }
 
-  clickTile = e => {
-    // step ++
-    this.setState(prevState => {
-      return { playerStep: `${parseInt(prevState.playerStep, 10) + 1}` };
-    });
-    // 檢查是否和挖空相鄰（用矩陣），相鄰代表可移動
-    // 如可移動，就 Target 跟 挖空 換位
-    // cue 換位動畫（動畫時其他地方鎖起來以防 User 連續亂按）
-    // 不可移動，就何も起こらない
-    // 檢查是否破關
-    console.log('Tile Clicked!', e);
+  clickTile = () => {
+    const { isStart } = this.state;
+    if (isStart) {
+      // step ++
+      this.setState(prevState => {
+        return { playerStep: `${parseInt(prevState.playerStep, 10) + 1}` };
+      });
+      // 檢查是否和挖空相鄰（用矩陣），相鄰代表可移動
+      // 如可移動，就 Target 跟 挖空 換位
+      // cue 換位動畫（動畫時其他地方鎖起來以防 User 連續亂按）
+      // 不可移動，就何も起こらない
+      // 檢查是否破關
+      console.log('Tile Clicked!');
+    }
   };
 
   checkSolved = e => {
@@ -76,7 +71,7 @@ class Game extends Component {
     console.log('Check Solved', e);
   };
 
-  clickStart = e => {
+  clickStart = () => {
     // 檢查有無名字，有才能玩，沒有要跳 Popup 提醒
     const { playerName } = this.state;
     if (!playerName || playerName === '') {
@@ -84,14 +79,15 @@ class Game extends Component {
         isPop: true,
       });
     } else {
-      // isStart 變 true，Start 要變 ReStart，遊戲進行中不可亂改名，所以 input 鎖起來
+      // isStart 變 true，Start 要變 ReStart
       this.setState({
         isStart: true,
+        playerStep: '0',
       });
+      // 出新題目 + shuffle 磁磚們
+      this.shuffleTiles();
     }
-    // 出新題目 + shuffle 磁磚們
-    this.shuffleTiles();
-    console.log('Start Clicked!', e);
+    console.log('Start Clicked!');
   };
 
   toggleIsPop = () => {
@@ -100,12 +96,25 @@ class Game extends Component {
     });
   };
 
-  shuffleTiles = e => {
-    // 先洗牌（用 List）
+  fisherYates = list => {
+    const newList = [...list];
+    for (let i = newList.length - 1; i > 0; i -= 1) {
+      const r = Math.floor(Math.random() * (i + 1));
+      const tmp = newList[i];
+      newList[i] = newList[r];
+      newList[r] = tmp;
+    }
+    return newList;
+  };
+
+  shuffleTiles = () => {
+    const { boxesList } = this.state;
+    // 先洗牌
+    const newBoxesList = this.fisherYates([...boxesList]);
     // 檢查 inversion 是基數還偶數（基數會破不了關，偶數才能破關）
     // 如果基數，List 前兩個人再換位，讓 inversion 變偶數
-    // 重算矩陣
-    console.log('Tiles Shuffle!', e);
+    this.setState({ boxesList: newBoxesList });
+    console.log('Tiles Shuffle!');
   };
 
   blurInput = () => {
@@ -122,6 +131,7 @@ class Game extends Component {
   changeName = e => {
     const { isStart } = this.state;
     if (isStart) {
+      // 遊戲進行中不可亂改名，所以 input 鎖起來
       this.setState({ isLock: true });
     } else {
       this.setState({
@@ -129,6 +139,31 @@ class Game extends Component {
         playerName: e.target.value,
       });
     }
+  };
+
+  initSize = (row, col) => {
+    const size = row * col;
+    this.setState({ boxesSize: size });
+  };
+
+  initList = size => {
+    const list = Array.from({ length: size }, (v, i) => i + 1);
+    this.setState({ boxesList: list });
+  };
+
+  initMatrix = (row, col, list) => {
+    const oneD = [...list];
+    const twoD = [];
+
+    let rowNum = row > 0 ? row : 0;
+
+    while (rowNum && oneD.length > 0) {
+      rowNum -= 1;
+      const chunk = oneD.splice(0, col);
+      twoD.push(chunk);
+    }
+
+    this.setState({ boxesMatrix: twoD });
   };
 
   render() {
