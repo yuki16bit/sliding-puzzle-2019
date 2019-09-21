@@ -107,13 +107,38 @@ class Game extends Component {
     return newList;
   };
 
+  isSolvable = list => {
+    let inversions = 0;
+    for (let i = 0; i < list.length; i += 1) {
+      for (let j = i + 1; j < list.length; j += 1) {
+        if (list[i] > list[j]) {
+          inversions += 1;
+        }
+      }
+    }
+    console.log('Inversions...', inversions);
+    if (inversions % 2 === 0) {
+      return true;
+    }
+    return false;
+  };
+
   shuffleTiles = () => {
     const { boxesList } = this.state;
     // 先洗牌
     const newBoxesList = this.fisherYates([...boxesList]);
     // 檢查 inversion 是基數還偶數（基數會破不了關，偶數才能破關）
-    // 如果基數，List 前兩個人再換位，讓 inversion 變偶數
-    this.setState({ boxesList: newBoxesList });
+    if (!this.isSolvable(newBoxesList)) {
+      // 如果基數，List 前兩個人再換位，讓 inversion 變偶數
+      console.log(newBoxesList, 'Cannot solvable, rearrange...');
+      const tmp = newBoxesList[0];
+      newBoxesList[0] = newBoxesList[1];
+      newBoxesList[1] = tmp;
+      console.log('rearranged list...', newBoxesList);
+      this.setState({ boxesList: newBoxesList });
+    } else {
+      this.setState({ boxesList: newBoxesList });
+    }
     console.log('Tiles Shuffle!');
   };
 
