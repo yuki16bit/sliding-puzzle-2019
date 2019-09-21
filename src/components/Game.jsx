@@ -40,11 +40,11 @@ class Game extends Component {
     const { boxesCol, boxesRow, boxesSize, boxesList } = this.state;
     if (prevState.boxesSize !== boxesSize) {
       this.initList(boxesSize);
-      console.log('initList');
     }
     if (prevState.boxesList !== boxesList) {
+      // 檢查是否破關
+      this.checkSolved();
       this.initMatrix(boxesRow, boxesCol, boxesList);
-      console.log('initMatrix!');
     }
   }
 
@@ -68,37 +68,39 @@ class Game extends Component {
     return Math.abs(tileX - holeX) + Math.abs(tileY - holeY) === 1;
   };
 
-  calcDistance = ({ x, y }) => {
-    return {
-      xMove: x * 100,
-      yMove: y * 100,
-    };
+  swap = val => {
+    const { boxesList } = this.state;
+    const swapList = [...boxesList];
+    const a = swapList.indexOf(parseInt(val, 10));
+    const b = swapList.indexOf(9);
+    const tmp = swapList[a];
+    swapList[a] = swapList[b];
+    swapList[b] = tmp;
+    this.setState({ boxesList: swapList });
   };
 
+  // calcDistance = ({ x, y }) => {
+  //   return {
+  //     xMove: x * 100,
+  //     yMove: y * 100,
+  //   };
+  // };
+
   clickTile = e => {
-    const { isStart, boxesList } = this.state;
+    const { isStart } = this.state;
     if (isStart) {
       const val = e.currentTarget.value;
       // 檢查是否和挖空相鄰（用矩陣），相鄰代表可移動
       if (this.canSwap(val)) {
         // 如可移動，就 Target 跟 挖空 換位
         // cue 換位動畫（動畫時其他地方鎖起來以防 User 連續亂按）
-        console.log('Swap!!!');
-        // let swapedList = [...boxesList];
-        // swapedList[val]
-        // this.setState({
-        // boxesList: swapedList;
-        // })
+        this.swap(val);
         // step ++
         this.setState(prevState => {
           return { playerStep: `${parseInt(prevState.playerStep, 10) + 1}` };
         });
+        // 不可移動，就何も起こらない
       }
-      // 不可移動，就何も起こらない
-      console.log('Cannot swap!!!');
-      // 檢查是否破關
-      this.checkSolved();
-      console.log('Tile Clicked!');
     }
   };
 
@@ -112,7 +114,6 @@ class Game extends Component {
     // 如果破關，cue 破關動畫（動畫時其他地方鎖起來以防 User 連續亂按）
     // isStart 變回 false，ReStart 變回 Start
     // 沒破關，何も起こらない
-    console.log('Not solved!');
   };
 
   clickStart = () => {
@@ -131,7 +132,6 @@ class Game extends Component {
       // 出新題目 + shuffle 磁磚們
       this.shuffleTiles();
     }
-    console.log('Start Clicked!');
   };
 
   toggleIsPop = () => {
@@ -160,7 +160,6 @@ class Game extends Component {
         }
       }
     }
-    console.log('Inversions...', inversions);
     if (inversions % 2 === 0) {
       return true;
     }
@@ -174,16 +173,13 @@ class Game extends Component {
     // 檢查 inversion 是基數還偶數（基數會破不了關，偶數才能破關）
     if (!this.isSolvable(newBoxesList)) {
       // 如果基數，List 前兩個人再換位，讓 inversion 變偶數
-      console.log(newBoxesList, 'Cannot solvable, rearrange...');
       const tmp = newBoxesList[0];
       newBoxesList[0] = newBoxesList[1];
       newBoxesList[1] = tmp;
-      console.log('rearranged list...', newBoxesList);
       this.setState({ boxesList: newBoxesList });
     } else {
       this.setState({ boxesList: newBoxesList });
     }
-    console.log('Tiles Shuffle!');
   };
 
   blurInput = () => {
