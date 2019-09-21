@@ -16,8 +16,12 @@ class Game extends Component {
     quiz: 'https://source.unsplash.com/900x900/?cat,sakura',
 
     // Player Data
-    playerName: 'Please Enter Your Name...',
+    playerName: '',
     playerStep: '0',
+
+    // Input Control
+    isLock: false,
+    placeholder: 'Please Enter Your Name...',
 
     // Boxes Data
     boxesRow: 3,
@@ -73,20 +77,20 @@ class Game extends Component {
   };
 
   clickStart = e => {
+    // 檢查有無名字，有才能玩，沒有要跳 Popup 提醒
     const { playerName } = this.state;
-    if (!playerName || playerName === 'Please Enter Your Name...') {
+    if (!playerName || playerName === '') {
       this.setState({
         isPop: true,
       });
     } else {
+      // isStart 變 true，Start 要變 ReStart，遊戲進行中不可亂改名，所以 input 鎖起來
       this.setState({
         isStart: true,
       });
     }
-
-    // 檢查有無名字，有才能玩，沒有要跳 Popup 提醒
-    // isStart 變 true，Start 要變 ReStart，遊戲進行中不可亂改名，所以 input 鎖起來
     // 出新題目 + shuffle 磁磚們
+    this.shuffleTiles();
     console.log('Start Clicked!', e);
   };
 
@@ -104,16 +108,41 @@ class Game extends Component {
     console.log('Tiles Shuffle!', e);
   };
 
+  blurInput = () => {
+    const { playerName } = this.state;
+    if (!playerName || playerName === '') {
+      this.setState({ placeholder: 'Please Enter Your Name...' });
+    }
+  };
+
+  focusInput = () => {
+    this.setState({ placeholder: '' });
+  };
+
   changeName = e => {
-    this.setState({ playerName: e.target.value });
+    const { isStart } = this.state;
+    if (isStart) {
+      this.setState({ isLock: true });
+    } else {
+      this.setState({
+        isLock: false,
+        playerName: e.target.value,
+      });
+    }
   };
 
   render() {
-    const { isStart, isPop, quiz, playerName, playerStep, boxesList } = this.state;
+    const { isStart, isPop, quiz, placeholder, playerStep, isLock, boxesList } = this.state;
     return (
       <div className='game'>
         <div className='game-info'>
-          <Info playerName={playerName} changeName={this.changeName} />
+          <Info
+            changeName={this.changeName}
+            placeholder={placeholder}
+            blurInput={this.blurInput}
+            focusInput={this.focusInput}
+            isLock={isLock}
+          />
           <Info playerStep={playerStep} />
           <Info quiz={quiz} />
         </div>
