@@ -23,11 +23,7 @@ const Info = ({ playerStep, quiz, changeName, placeholder, blurInput, focusInput
         <input type='text' name='step' value={playerStep} readOnly />
       </label>
     )}
-    {quiz && (
-      <div className='info-quiz'>
-        <img src={quiz} alt='' />
-      </div>
-    )}
+    {quiz && <div className='quiz' style={{ backgroundImage: `url('${quiz}')` }} />}
   </div>
 );
 

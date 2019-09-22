@@ -13,7 +13,7 @@ class Game extends Component {
     // Game Data
     isStart: false,
     isPop: false,
-    quiz: 'https://source.unsplash.com/900x900/?cat,sakura',
+    quiz: 'https://source.unsplash.com/300x300/?cat',
 
     // Player Data
     playerName: '',
@@ -63,19 +63,19 @@ class Game extends Component {
   canSwap = tile => {
     const tileX = this.findCoord(tile).x;
     const tileY = this.findCoord(tile).y;
-    const holeX = this.findCoord(9).x;
-    const holeY = this.findCoord(9).y;
-    return Math.abs(tileX - holeX) + Math.abs(tileY - holeY) === 1;
+    const gapX = this.findCoord(9).x;
+    const gapY = this.findCoord(9).y;
+    return Math.abs(tileX - gapX) + Math.abs(tileY - gapY) === 1;
   };
 
   swap = val => {
     const { boxesList } = this.state;
     const swapList = [...boxesList];
-    const a = swapList.indexOf(parseInt(val, 10));
-    const b = swapList.indexOf(9);
-    const tmp = swapList[a];
-    swapList[a] = swapList[b];
-    swapList[b] = tmp;
+    const tile = swapList.indexOf(parseInt(val, 10));
+    const gap = swapList.indexOf(9);
+    const tmp = swapList[tile];
+    swapList[tile] = swapList[gap];
+    swapList[gap] = tmp;
     this.setState({ boxesList: swapList });
   };
 
@@ -246,7 +246,7 @@ class Game extends Component {
           <Info playerStep={playerStep} />
           <Info quiz={quiz} />
         </div>
-        <Tiles isStart={isStart} boxesList={boxesList} clickTile={this.clickTile} />
+        <Tiles isStart={isStart} boxesList={boxesList} clickTile={this.clickTile} quiz={quiz} />
         <Start isStart={isStart} clickStart={this.clickStart} />
         <Popup isPop={isPop} toggleIsPop={this.toggleIsPop} />
       </div>

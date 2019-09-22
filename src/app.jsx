@@ -6,8 +6,8 @@ import './App.scss';
 import Game from './components/Game';
 
 const App = () => (
-  <div>
-    <h3>Hello</h3>
+  <div className='app'>
+    <h3>Sliding Cat (Ф∀Ф)</h3>
     <Game />
   </div>
 );
