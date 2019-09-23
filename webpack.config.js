@@ -6,7 +6,7 @@ const dist = path.resolve(__dirname, 'dist');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-  entry: `${src}/app.jsx`,
+  entry: ['@babel/polyfill', `${src}/app.jsx`],
   output: {
     path: dist,
     filename: 'bundle.js',

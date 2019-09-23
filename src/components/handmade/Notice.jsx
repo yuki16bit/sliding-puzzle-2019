@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const Notice = ({ noticeMsg }) => (
-  <div className='notice'>
+  <div className='modal notice'>
     <p>{noticeMsg}</p>
-    {/* <button type='button'>OK</button> */}
+    <button type='button'>OK</button>
   </div>
 );
 

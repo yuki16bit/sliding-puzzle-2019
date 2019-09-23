@@ -19,16 +19,18 @@ const Overlay = PopType => {
       return (
         <div>
           {isPop && (
-            <button
-              type='button'
+            <div
+              role='button'
+              tabIndex='0'
               className='overlay'
               ref={node => {
                 this.innerRef = node;
               }}
               onClick={this.clickOutside}
+              onKeyUp={null}
             >
               <PopType {...this.props} />
-            </button>
+            </div>
           )}
         </div>
       );

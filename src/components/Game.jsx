@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 
 // UI
 import Popup from './handmade/Popup';
@@ -12,8 +13,14 @@ class Game extends Component {
   state = {
     // Game Data
     isStart: false,
+    isSolved: false,
     isPop: false,
-    quiz: 'https://source.unsplash.com/300x300/?cat',
+    quiz: '',
+    photographer: '',
+    photographerProfile: '',
+
+    // Unsplash API Demo mode 一天限 Request 50 次，超過 or 省次數的畫先用這個
+    // 'https://source.unsplash.com/300x300/?cat',
 
     // Player Data
     playerName: '',
@@ -34,10 +41,11 @@ class Game extends Component {
   componentDidMount() {
     const { boxesRow, boxesCol } = this.state;
     this.initSize(boxesRow, boxesCol);
+    this.getQuiz();
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { boxesCol, boxesRow, boxesSize, boxesList } = this.state;
+    const { isStart, boxesCol, boxesRow, boxesSize, boxesList } = this.state;
     if (prevState.boxesSize !== boxesSize) {
       this.initList(boxesSize);
     }
@@ -46,7 +54,31 @@ class Game extends Component {
       this.checkSolved();
       this.initMatrix(boxesRow, boxesCol, boxesList);
     }
+    if (prevState.isStart !== isStart) {
+      if (isStart) {
+        this.setState({ isLock: true });
+      } else {
+        this.setState({ isLock: false });
+      }
+    }
   }
+
+  getQuiz = async () => {
+    const res = await axios.get('https://api.unsplash.com/photos/random', {
+      headers: {
+        Authorization: 'Client-ID ba8681023a3d34f44297a986501a75a42b07494085bc0205e245de1d1aa88a87',
+      },
+      params: {
+        query: 'cat',
+      },
+    });
+    const quiz = `${res.data.urls.raw}&w=300&h=300&fit=crop&crop=center`;
+    const photographer = `${res.data.user.name}`;
+    const photographerProfile = `${res.data.user.links.html}`;
+    // TODO: 之後寫個 Credit 回饋作者 & Unsplash
+    console.log(res.data);
+    this.setState({ quiz, photographer, photographerProfile });
+  };
 
   findCoord = val => {
     const { boxesMatrix } = this.state;
@@ -109,7 +141,7 @@ class Game extends Component {
     const ideal = [1, 2, 3, 4, 5, 6, 7, 8, 9];
     if (boxesList.join() === ideal.join()) {
       console.log('Solved!!!');
-      this.setState({ isStart: false });
+      this.setState({ isStart: false, isSolved: true });
     }
     // 如果破關，cue 破關動畫（動畫時其他地方鎖起來以防 User 連續亂按）
     // isStart 變回 false，ReStart 變回 Start
@@ -127,6 +159,7 @@ class Game extends Component {
       // isStart 變 true，Start 要變 ReStart
       this.setState({
         isStart: true,
+        isSolved: false,
         playerStep: '0',
       });
       // 出新題目 + shuffle 磁磚們
@@ -194,16 +227,9 @@ class Game extends Component {
   };
 
   changeName = e => {
-    const { isStart } = this.state;
-    if (isStart) {
-      // 遊戲進行中不可亂改名，所以 input 鎖起來
-      this.setState({ isLock: true });
-    } else {
-      this.setState({
-        isLock: false,
-        playerName: e.target.value,
-      });
-    }
+    this.setState({
+      playerName: e.target.value,
+    });
   };
 
   initSize = (row, col) => {
@@ -232,7 +258,17 @@ class Game extends Component {
   };
 
   render() {
-    const { isStart, isPop, quiz, placeholder, playerStep, isLock, boxesList } = this.state;
+    const {
+      isStart,
+      isPop,
+      quiz,
+      placeholder,
+      playerStep,
+      isLock,
+      boxesList,
+      photographerProfile,
+      photographer,
+    } = this.state;
     return (
       <div className='game'>
         <div className='game-info'>
@@ -247,6 +283,16 @@ class Game extends Component {
           <Info quiz={quiz} />
         </div>
         <Tiles isStart={isStart} boxesList={boxesList} clickTile={this.clickTile} quiz={quiz} />
+        <p className='game-credit'>
+          Photo by{' '}
+          <a href={photographerProfile} target='_blank' rel='noopener noreferrer'>
+            {photographer}
+          </a>{' '}
+          on{' '}
+          <a href='https://unsplash.com' target='_blank' rel='noopener noreferrer'>
+            Unsplash
+          </a>
+        </p>
         <Start isStart={isStart} clickStart={this.clickStart} />
         <Popup isPop={isPop} toggleIsPop={this.toggleIsPop} />
       </div>
