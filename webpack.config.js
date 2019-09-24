@@ -1,11 +1,9 @@
-const webpack = require('webpack');
 const path = require('path');
 
 const src = path.resolve(__dirname, 'src');
 const dist = path.resolve(__dirname, 'dist');
 
 const HtmlWebPackPlugin = require('html-webpack-plugin');
-const autoprefixer = require('autoprefixer');
 
 module.exports = {
   entry: ['@babel/polyfill', `${src}/app.jsx`],
@@ -35,14 +33,6 @@ module.exports = {
         ],
       },
       {
-        test: /\.css$/,
-        use: [
-          'style-loader',
-          { loader: 'css-loader', options: { importLoaders: 1 } },
-          'postcss-loader',
-        ],
-      },
-      {
         test: /\.(jpe?g|png|gif)$/,
         use: [
           {
@@ -61,13 +51,6 @@ module.exports = {
       template: `${src}/index.html`,
       filename: 'index.html',
       // favicon: src + "path/to/your/favicon.ico"
-    }),
-    new webpack.LoaderOptionsPlugin({
-      options: {
-        postcss() {
-          return [autoprefixer];
-        },
-      },
     }),
   ],
 };

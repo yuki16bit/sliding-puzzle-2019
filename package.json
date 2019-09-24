@@ -12,15 +12,9 @@
   "homepage": "https://github.com/julieliao/sliding-puzzle",
   "author": "jujuriri",
   "license": "ISC",
-  "postcss": {
-    "plugins": {
-      "autoprefixer": {}
-    }
-  },
   "browserslist": [
-    "last 2 version",
-    "not dead",
-    "iOS >= 9"
+    "> 1%",
+    "last 2 versions"
   ],
   "devDependencies": {
     "@babel/core": "^7.5.5",
@@ -28,7 +22,6 @@
     "@babel/polyfill": "^7.6.0",
     "@babel/preset-env": "^7.5.5",
     "@babel/preset-react": "^7.0.0",
-    "autoprefixer": "^9.6.1",
     "babel-eslint": "^10.0.3",
     "babel-loader": "^8.0.6",
     "css-loader": "^3.2.0",
@@ -40,6 +33,7 @@
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-prettier": "^3.1.0",
     "eslint-plugin-react": "^7.14.3",
+    "eslint-plugin-react-hooks": "^2.0.1",
     "file-loader": "^4.2.0",
     "gh-pages": "^2.1.1",
     "html-webpack-plugin": "^3.2.0",
@@ -55,7 +49,9 @@
     "webpack-dev-server": "^3.8.0"
   },
   "dependencies": {
+    "autoprefixer": "^9.6.1",
     "axios": "^0.19.0",
+    "postcss-flexbugs-fixes": "^4.1.0",
     "prop-types": "^15.7.2",
     "react": "^16.9.0",
     "react-dom": "^16.9.0"
