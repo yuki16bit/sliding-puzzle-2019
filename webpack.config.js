@@ -57,7 +57,7 @@ module.exports = {
     new HtmlWebPackPlugin({
       template: `${src}/index.html`,
       filename: 'index.html',
-      // favicon: src + "path/to/your/favicon.ico"
+      favicon: `${src}/imgs/favicon.ico`,
     }),
   ],
 };

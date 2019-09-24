@@ -15,7 +15,7 @@ class Game extends Component {
     isStart: false,
     isSolved: false,
     isPop: false,
-    quiz: '',
+    quiz: 'https://source.unsplash.com/300x300/?cat',
     photographer: '',
     photographerProfile: '',
 
@@ -41,7 +41,7 @@ class Game extends Component {
   componentDidMount() {
     const { boxesRow, boxesCol } = this.state;
     this.initSize(boxesRow, boxesCol);
-    this.getQuiz();
+    // this.getQuiz();
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -49,7 +49,7 @@ class Game extends Component {
     if (prevState.boxesSize !== boxesSize) {
       this.initList(boxesSize);
     }
-    if (prevState.boxesList !== boxesList) {
+    if (isStart && prevState.boxesList !== boxesList) {
       // 檢查是否破關
       this.checkSolved();
       this.initMatrix(boxesRow, boxesCol, boxesList);
@@ -150,12 +150,16 @@ class Game extends Component {
 
   clickStart = () => {
     // 檢查有無名字，有才能玩，沒有要跳 Popup 提醒
-    const { playerName } = this.state;
+    const { playerName, isStart, isSolved } = this.state;
     if (!playerName || playerName === '') {
       this.setState({
         isPop: true,
       });
     } else {
+      if (!isStart && isSolved) {
+        // 初クリア後繼續玩新一局
+        this.getQuiz();
+      }
       // isStart 變 true，Start 要變 ReStart
       this.setState({
         isStart: true,
