@@ -3,6 +3,7 @@ const path = require('path');
 const src = path.resolve(__dirname, 'src');
 const dist = path.resolve(__dirname, 'dist');
 
+const sass = require('node-sass');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 
 module.exports = {
@@ -19,21 +20,15 @@ module.exports = {
         use: 'babel-loader',
       },
       {
-        test: /\.scss$/,
+        test: /\.(sa|sc|c)ss$/,
         use: [
           'style-loader',
           'css-loader',
-          {
-            loader: 'postcss-loader',
-            options: {
-              config: {
-                path: './postcss.config.js',
-              },
-            },
-          },
+          'postcss-loader',
           {
             loader: 'sass-loader',
             options: {
+              implementation: sass,
               sourceMap: process.env.NODE_ENV !== 'production',
             },
           },

@@ -15,7 +15,7 @@ class Game extends Component {
     isStart: false,
     isSolved: false,
     isPop: false,
-    quiz: 'https://source.unsplash.com/300x300/?cat',
+    quiz: '',
     photographer: '',
     photographerProfile: '',
 
@@ -41,6 +41,7 @@ class Game extends Component {
   componentDidMount() {
     const { boxesRow, boxesCol } = this.state;
     this.initSize(boxesRow, boxesCol);
+    this.forTest();
     // this.getQuiz();
   }
 
@@ -50,19 +51,24 @@ class Game extends Component {
       this.initList(boxesSize);
     }
     if (isStart && prevState.boxesList !== boxesList) {
+      this.initMatrix(boxesRow, boxesCol, boxesList);
       // 檢查是否破關
       this.checkSolved();
-      this.initMatrix(boxesRow, boxesCol, boxesList);
     }
     if (prevState.isStart !== isStart) {
-      if (isStart) {
-        this.setState({ isLock: true });
-      } else {
-        this.setState({ isLock: false });
-      }
+      this.toggleIsLock();
     }
   }
 
+  forTest = () => {
+    setTimeout(()=>{
+      this.setState({
+        quiz: 'https://source.unsplash.com/300x300/?cat',
+      })
+    }, 2000);
+  }
+
+  // 用 axios 串接 Unsplash API 取得貓咪圖片作為拼圖題目
   getQuiz = async () => {
     const res = await axios.get('https://api.unsplash.com/photos/random', {
       headers: {
@@ -75,7 +81,6 @@ class Game extends Component {
     const quiz = `${res.data.urls.raw}&w=300&h=300&fit=crop&crop=center`;
     const photographer = `${res.data.user.name}`;
     const photographerProfile = `${res.data.user.links.html}`;
-    // TODO: 之後寫個 Credit 回饋作者 & Unsplash
     console.log(res.data);
     this.setState({ quiz, photographer, photographerProfile });
   };
@@ -158,15 +163,17 @@ class Game extends Component {
     } else {
       if (!isStart && isSolved) {
         // 初クリア後繼續玩新一局
-        this.getQuiz();
+        this.setState({ quiz: '' });
+        this.forTest();
+        // this.getQuiz();
       }
-      // isStart 變 true，Start 要變 ReStart
+      // isStart 變 true，isSolved 要變 false
       this.setState({
         isStart: true,
         isSolved: false,
         playerStep: '0',
       });
-      // 出新題目 + shuffle 磁磚們
+      // shuffle 磁磚們
       this.shuffleTiles();
     }
   };
@@ -174,6 +181,12 @@ class Game extends Component {
   toggleIsPop = () => {
     this.setState(prevState => {
       return { isPop: !prevState.isPop };
+    });
+  };
+
+  toggleIsLock = () => {
+    this.setState(prevState => {
+      return { isLock: !prevState.isLock };
     });
   };
 
@@ -197,10 +210,8 @@ class Game extends Component {
         }
       }
     }
-    if (inversions % 2 === 0) {
-      return true;
-    }
-    return false;
+    console.log('inversions: ', inversions);
+    return (inversions % 2 === 0);
   };
 
   shuffleTiles = () => {
@@ -213,6 +224,7 @@ class Game extends Component {
       const tmp = newBoxesList[0];
       newBoxesList[0] = newBoxesList[1];
       newBoxesList[1] = tmp;
+      this.isSolvable(newBoxesList);
       this.setState({ boxesList: newBoxesList });
     } else {
       this.setState({ boxesList: newBoxesList });

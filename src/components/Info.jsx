@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import Loading from './handmade/Loading';
+
 const Info = ({ playerStep, quiz, changeName, placeholder, blurInput, focusInput, isLock }) => (
   <div className='info'>
     {changeName && (
@@ -23,7 +25,14 @@ const Info = ({ playerStep, quiz, changeName, placeholder, blurInput, focusInput
         <input type='text' name='step' value={playerStep} readOnly />
       </label>
     )}
-    {quiz && <div className='quiz' style={{ backgroundImage: `url('${quiz}')` }} />}
+    {quiz && (
+      <div className='quiz' style={{ backgroundImage: `url('${quiz}')` }} />
+    )}
+    {quiz === '' && (
+      <div className='quiz' style={{ backgroundColor: 'white' }}>
+        <Loading />
+      </div>
+    )}
   </div>
 );
 
