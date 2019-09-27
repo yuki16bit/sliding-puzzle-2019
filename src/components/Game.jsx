@@ -61,12 +61,12 @@ class Game extends Component {
   }
 
   forTest = () => {
-    setTimeout(()=>{
+    setTimeout(() => {
       this.setState({
         quiz: 'https://source.unsplash.com/300x300/?cat',
-      })
-    }, 2000);
-  }
+      });
+    }, 1000);
+  };
 
   // 用 axios 串接 Unsplash API 取得貓咪圖片作為拼圖題目
   getQuiz = async () => {
@@ -211,7 +211,7 @@ class Game extends Component {
       }
     }
     console.log('inversions: ', inversions);
-    return (inversions % 2 === 0);
+    return inversions % 2 === 0;
   };
 
   shuffleTiles = () => {
