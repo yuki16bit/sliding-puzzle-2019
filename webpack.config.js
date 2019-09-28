@@ -11,6 +11,7 @@ module.exports = {
   output: {
     path: dist,
     filename: 'bundle.js',
+    publicPath: '/',
   },
   module: {
     rules: [
@@ -55,4 +56,8 @@ module.exports = {
       favicon: `${src}/imgs/favicon.ico`,
     }),
   ],
+  devServer: {
+    port: 8080,
+    publicPath: '/',
+  },
 };

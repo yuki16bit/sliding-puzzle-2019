@@ -30,28 +30,28 @@ class Game extends Component {
     isLock: false,
     placeholder: 'Please Enter Your Name...',
 
-    // Boxes Data
-    boxesRow: 3,
-    boxesCol: 3,
-    boxesSize: 0,
-    boxesList: [],
-    boxesMatrix: [],
+    // tiles Data
+    tilesRow: 3,
+    tilesCol: 3,
+    tilesSize: 0,
+    tilesList: [],
+    tilesMatrix: [],
   };
 
   componentDidMount() {
-    const { boxesRow, boxesCol } = this.state;
-    this.initSize(boxesRow, boxesCol);
+    const { tilesRow, tilesCol } = this.state;
+    this.initSize(tilesRow, tilesCol);
     this.forTest();
     // this.getQuiz();
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { isStart, boxesCol, boxesRow, boxesSize, boxesList } = this.state;
-    if (prevState.boxesSize !== boxesSize) {
-      this.initList(boxesSize);
+    const { isStart, tilesCol, tilesRow, tilesSize, tilesList } = this.state;
+    if (prevState.tilesSize !== tilesSize) {
+      this.initList(tilesSize);
     }
-    if (isStart && prevState.boxesList !== boxesList) {
-      this.initMatrix(boxesRow, boxesCol, boxesList);
+    if (isStart && prevState.tilesList !== tilesList) {
+      this.initMatrix(tilesRow, tilesCol, tilesList);
       // 檢查是否破關
       this.checkSolved();
     }
@@ -86,10 +86,10 @@ class Game extends Component {
   };
 
   findCoord = val => {
-    const { boxesMatrix } = this.state;
-    for (let i = 0; i < boxesMatrix.length; i += 1) {
-      for (let j = 0; j < boxesMatrix.length; j += 1) {
-        if (boxesMatrix[i][j] === parseInt(val, 10)) {
+    const { tilesMatrix } = this.state;
+    for (let i = 0; i < tilesMatrix.length; i += 1) {
+      for (let j = 0; j < tilesMatrix.length; j += 1) {
+        if (tilesMatrix[i][j] === parseInt(val, 10)) {
           return { x: i, y: j };
         }
       }
@@ -106,14 +106,14 @@ class Game extends Component {
   };
 
   swap = val => {
-    const { boxesList } = this.state;
-    const swapList = [...boxesList];
+    const { tilesList } = this.state;
+    const swapList = [...tilesList];
     const tile = swapList.indexOf(parseInt(val, 10));
     const gap = swapList.indexOf(9);
     const tmp = swapList[tile];
     swapList[tile] = swapList[gap];
     swapList[gap] = tmp;
-    this.setState({ boxesList: swapList });
+    this.setState({ tilesList: swapList });
   };
 
   // calcDistance = ({ x, y }) => {
@@ -142,9 +142,9 @@ class Game extends Component {
   };
 
   checkSolved = () => {
-    const { boxesList } = this.state;
+    const { tilesList } = this.state;
     const ideal = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-    if (boxesList.join() === ideal.join()) {
+    if (tilesList.join() === ideal.join()) {
       console.log('Solved!!!');
       this.setState({ isStart: false, isSolved: true });
     }
@@ -215,19 +215,19 @@ class Game extends Component {
   };
 
   shuffleTiles = () => {
-    const { boxesList } = this.state;
+    const { tilesList } = this.state;
     // 先洗牌
-    const newBoxesList = this.fisherYates([...boxesList]);
+    const newtilesList = this.fisherYates([...tilesList]);
     // 檢查 inversion 是基數還偶數（基數會破不了關，偶數才能破關）
-    if (!this.isSolvable(newBoxesList)) {
+    if (!this.isSolvable(newtilesList)) {
       // 如果基數，List 前兩個人再換位，讓 inversion 變偶數
-      const tmp = newBoxesList[0];
-      newBoxesList[0] = newBoxesList[1];
-      newBoxesList[1] = tmp;
-      this.isSolvable(newBoxesList);
-      this.setState({ boxesList: newBoxesList });
+      const tmp = newtilesList[0];
+      newtilesList[0] = newtilesList[1];
+      newtilesList[1] = tmp;
+      this.isSolvable(newtilesList);
+      this.setState({ tilesList: newtilesList });
     } else {
-      this.setState({ boxesList: newBoxesList });
+      this.setState({ tilesList: newtilesList });
     }
   };
 
@@ -250,12 +250,12 @@ class Game extends Component {
 
   initSize = (row, col) => {
     const size = row * col;
-    this.setState({ boxesSize: size });
+    this.setState({ tilesSize: size });
   };
 
   initList = size => {
     const list = Array.from({ length: size }, (v, i) => i + 1);
-    this.setState({ boxesList: list });
+    this.setState({ tilesList: list });
   };
 
   initMatrix = (row, col, list) => {
@@ -270,7 +270,7 @@ class Game extends Component {
       twoD.push(chunk);
     }
 
-    this.setState({ boxesMatrix: twoD });
+    this.setState({ tilesMatrix: twoD });
   };
 
   render() {
@@ -281,7 +281,7 @@ class Game extends Component {
       placeholder,
       playerStep,
       isLock,
-      boxesList,
+      tilesList,
       photographerProfile,
       photographer,
     } = this.state;
@@ -298,7 +298,7 @@ class Game extends Component {
           <Info playerStep={playerStep} />
           <Info quiz={quiz} />
         </div>
-        <Tiles isStart={isStart} boxesList={boxesList} clickTile={this.clickTile} quiz={quiz} />
+        <Tiles isStart={isStart} tilesList={tilesList} clickTile={this.clickTile} quiz={quiz} />
         <p className='game-credit'>
           Photo by{' '}
           <a href={photographerProfile} target='_blank' rel='noopener noreferrer'>

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { db } from '../firebase';
+import db from '../Firebase';
 
 class Ranking extends Component {
   state = {
@@ -7,23 +7,31 @@ class Ranking extends Component {
   };
 
   componentDidMount() {
+    // 監聽 firestore
     this.getRanking();
   }
 
-  // firestore
-  getRanking = () => {
-    // listen realtime updates
-    // realtime updates 要把 onSnapshot 回傳的東東放在 Promise 裡解決非同步問題。
-    let ranking = [];
-    db.collection('ranking').where('step', '>=', '0')
-    .onSnapshot(querySnapshot => {
-      querySnapshot.forEach(doc => {
-        console.log("Current data: ", doc.data());
-        ranking.push(doc.data());
-      });
-    });
-    this.setState({ ranking });
+  componentWillUnmount() {
+    // 移除監聽 firestore
   }
+
+  getRanking = () => {
+    // firesote realtime updates
+    db.collection('ranking')
+      // .where('step', '>=', '0')
+      .onSnapshot(querySnapshot => {
+        // 在這層 setState 以解決 onSnapshot 非同步的問題。
+        const ranking = [];
+        querySnapshot.forEach(doc => {
+          const player = doc.data();
+          ranking.push({
+            name: player.name,
+            step: player.step,
+          });
+        });
+        this.setState({ ranking });
+      });
+  };
 
   render() {
     const { ranking } = this.state;
@@ -34,6 +42,7 @@ class Ranking extends Component {
           return (
             <div key={i} className='ranking-list'>
               {rank.name}
+              {rank.step}
             </div>
           );
         })}
