@@ -52,6 +52,7 @@ module.exports = {
   plugins: [
     new webpack.DefinePlugin({
       'process.env.REACT_APP_UNSPLASH_API_KEY': process.env.REACT_APP_UNSPLASH_API_KEY,
+      'process.env.REACT_APP_FIRESTORE_API_KEY': process.env.REACT_APP_FIRESTORE_API_KEY,
     }),
     new HtmlWebPackPlugin({
       template: `${src}/index.html`,

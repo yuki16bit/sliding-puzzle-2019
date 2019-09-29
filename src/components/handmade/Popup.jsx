@@ -8,9 +8,6 @@ const Overlay = PopType => {
     clickOutside = e => {
       if (e.target.contains(this.innerRef)) {
         this.props.toggleIsPop();
-        console.log('點到 Overlay，關掉 PopUp');
-      } else {
-        console.log('點到 Notice');
       }
     };
 

@@ -40,10 +40,11 @@ class Ranking extends Component {
         <p>Top 10 Ranking</p>
         {ranking.map((rank, i) => {
           return (
-            <div key={i} className='ranking-list'>
-              {rank.name}
-              {rank.step}
-            </div>
+            <dl key={i}>
+              <dt>{i + 1}</dt>
+              <dd>{rank.name}</dd>
+              <dd>{rank.step}</dd>
+            </dl>
           );
         })}
       </div>

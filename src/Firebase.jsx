@@ -4,7 +4,7 @@ import firebase from 'firebase/app';
 import 'firebase/firestore';
 
 const config = {
-  apiKey: 'AIzaSyCIcUn_fvnZHigAe7VWOX9CcxLwWcGs_yU',
+  apiKey: 'process.env.REACT_APP_FIRESTORE_API_KEY',
   authDomain: 'sliding-cat.firebaseapp.com',
   databaseURL: 'https://sliding-cat.firebaseio.com',
   projectId: 'sliding-cat',
