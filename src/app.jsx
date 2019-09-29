@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import { BrowserRouter, Route, NavLink } from 'react-router-dom';
+import { HashRouter as Router, Route, NavLink } from 'react-router-dom';
 
 import './App.scss';
 
@@ -11,7 +11,7 @@ import Ranking from './components/Ranking';
 const App = () => (
   <div className='app'>
     <h3>Sliding Cat (Ф∀Ф)</h3>
-    <BrowserRouter>
+    <Router>
       <div className='nav'>
         <NavLink exact to='/' className='link' activeClassName='link-active'>
           Game
@@ -22,7 +22,7 @@ const App = () => (
       </div>
       <Route exact path='/' render={() => <Game />} />
       <Route path='/ranking' render={() => <Ranking />} />
-    </BrowserRouter>
+    </Router>
   </div>
 );
 

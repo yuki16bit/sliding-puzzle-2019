@@ -1,7 +1,7 @@
 {
-  "name": "sliding-puzzle",
+  "name": "sliding-cat",
   "version": "0.0.5",
-  "description": "3 × 3 Sliding Puzzle Game with React & Webpack",
+  "description": "3 × 3 Sliding Puzzle Game.",
   "private": true,
   "scripts": {
     "build": "webpack --mode production",
@@ -9,7 +9,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "deploy": "gh-pages -d dist"
   },
-  "homepage": "https://github.com/julieliao/sliding-puzzle",
+  "homepage": "https://github.com/julieliao/sliding-cat",
   "author": "jujuriri",
   "license": "ISC",
   "browserslist": [
@@ -50,6 +50,7 @@
   "dependencies": {
     "autoprefixer": "^9.6.1",
     "axios": "^0.19.0",
+    "dotenv": "^8.1.0",
     "firebase": "^7.0.0",
     "prop-types": "^15.7.2",
     "react": "^16.9.0",

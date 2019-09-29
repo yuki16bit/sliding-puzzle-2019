@@ -72,7 +72,7 @@ class Game extends Component {
   getQuiz = async () => {
     const res = await axios.get('https://api.unsplash.com/photos/random', {
       headers: {
-        Authorization: 'Client-ID ba8681023a3d34f44297a986501a75a42b07494085bc0205e245de1d1aa88a87',
+        Authorization: `Client-ID ${process.env.REACT_APP_UNSPLASH_API_KEY}`,
       },
       params: {
         query: 'cat',

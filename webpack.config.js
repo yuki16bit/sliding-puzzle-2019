@@ -1,9 +1,11 @@
+require('dotenv').config();
+const webpack = require('webpack');
+
 const path = require('path');
 
 const src = path.resolve(__dirname, 'src');
 const dist = path.resolve(__dirname, 'dist');
 
-const sass = require('node-sass');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 
 module.exports = {
@@ -11,7 +13,6 @@ module.exports = {
   output: {
     path: dist,
     filename: 'bundle.js',
-    publicPath: '/',
   },
   module: {
     rules: [
@@ -29,7 +30,6 @@ module.exports = {
           {
             loader: 'sass-loader',
             options: {
-              implementation: sass,
               sourceMap: process.env.NODE_ENV !== 'production',
             },
           },
@@ -50,6 +50,9 @@ module.exports = {
     extensions: ['.js', '.jsx'],
   },
   plugins: [
+    new webpack.DefinePlugin({
+      'process.env.REACT_APP_UNSPLASH_API_KEY': process.env.REACT_APP_UNSPLASH_API_KEY,
+    }),
     new HtmlWebPackPlugin({
       template: `${src}/index.html`,
       filename: 'index.html',
@@ -58,6 +61,5 @@ module.exports = {
   ],
   devServer: {
     port: 8080,
-    publicPath: '/',
   },
 };
