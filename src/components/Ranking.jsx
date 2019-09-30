@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 class Ranking extends Component {
   componentDidMount() {
-    console.log(this.props.value.location);
+    console.log(this.props);
   }
 
   checkTopTen = () => {
