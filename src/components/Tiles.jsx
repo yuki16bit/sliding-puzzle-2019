@@ -22,8 +22,8 @@ const Tiles = ({ tilesList, clickTile, quiz }) => (
         );
       })
     ) : (
-        <Loading />
-      )}
+      <Loading />
+    )}
   </div>
 );
 

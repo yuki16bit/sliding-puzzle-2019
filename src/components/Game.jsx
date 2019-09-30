@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import axios from 'axios';
+import { withRouter } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 // UI
 import Popup from './handmade/Popup';
@@ -15,12 +16,8 @@ class Game extends Component {
     isStart: false,
     isSolved: false,
     isPop: false,
-    quiz: '',
-    photographer: '',
-    photographerProfile: '',
-
-    // Unsplash API Demo mode 一天限 Request 50 次，超過 or 省次數的畫先用這個
-    // 'https://source.unsplash.com/300x300/?cat',
+    noticeMsg: '',
+    clickOutside: true,
 
     // Player Data
     playerName: '',
@@ -28,7 +25,7 @@ class Game extends Component {
 
     // Input Control
     isLock: false,
-    placeholder: 'Please Enter Your Name...',
+    placeholder: 'Your Name...',
 
     // tiles Data
     tilesRow: 3,
@@ -41,8 +38,6 @@ class Game extends Component {
   componentDidMount() {
     const { tilesRow, tilesCol } = this.state;
     this.initSize(tilesRow, tilesCol);
-    this.forTest();
-    // this.getQuiz();
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -59,31 +54,6 @@ class Game extends Component {
       this.toggleIsLock();
     }
   }
-
-  forTest = () => {
-    setTimeout(() => {
-      this.setState({
-        quiz: 'https://source.unsplash.com/300x300/?cat',
-      });
-    }, 1000);
-  };
-
-  // 用 axios 串接 Unsplash API 取得貓咪圖片作為拼圖題目
-  getQuiz = async () => {
-    const res = await axios.get('https://api.unsplash.com/photos/random', {
-      headers: {
-        Authorization: `Client-ID ${process.env.REACT_APP_UNSPLASH_API_KEY}`,
-      },
-      params: {
-        query: 'cat',
-      },
-    });
-    const quiz = `${res.data.urls.raw}&w=300&h=300&fit=crop&crop=center`;
-    const photographer = `${res.data.user.name}`;
-    const photographerProfile = `${res.data.user.links.html}`;
-    console.log(res.data);
-    this.setState({ quiz, photographer, photographerProfile });
-  };
 
   findCoord = val => {
     const { tilesMatrix } = this.state;
@@ -142,30 +112,45 @@ class Game extends Component {
   };
 
   checkSolved = () => {
-    const { tilesList } = this.state;
+    const { tilesList, playerName, playerStep } = this.state;
+    const { history } = this.props;
     const ideal = [1, 2, 3, 4, 5, 6, 7, 8, 9];
     if (tilesList.join() === ideal.join()) {
-      console.log('Solved!!!');
-      this.setState({ isStart: false, isSolved: true });
+      this.setState(
+        {
+          isStart: false,
+          isSolved: true,
+          isPop: true,
+          clickOutside: false,
+          noticeMsg: 'Congratulations! You won!',
+        },
+        () => {
+          setTimeout(() => {
+            history.push({
+              pathname: '/ranking',
+              state: { playerName, playerStep },
+            });
+          }, 2000);
+        },
+      );
     }
-    // 如果破關，cue 破關動畫（動畫時其他地方鎖起來以防 User 連續亂按）
-    // isStart 變回 false，ReStart 變回 Start
-    // 沒破關，何も起こらない
   };
 
   clickStart = () => {
     // 檢查有無名字，有才能玩，沒有要跳 Popup 提醒
     const { playerName, isStart, isSolved } = this.state;
+    const { clearQuiz, forTest, getQuiz } = this.props;
     if (!playerName || playerName === '') {
       this.setState({
         isPop: true,
+        noticeMsg: 'Please enter your name to start the game.',
       });
     } else {
       if (!isStart && isSolved) {
         // 初クリア後繼續玩新一局
-        this.setState({ quiz: '' });
-        this.forTest();
-        // this.getQuiz();
+        clearQuiz();
+        forTest();
+        // getQuiz();
       }
       // isStart 變 true，isSolved 要變 false
       this.setState({
@@ -234,7 +219,7 @@ class Game extends Component {
   blurInput = () => {
     const { playerName } = this.state;
     if (!playerName || playerName === '') {
-      this.setState({ placeholder: 'Please Enter Your Name...' });
+      this.setState({ placeholder: 'Your Name...' });
     }
   };
 
@@ -277,14 +262,14 @@ class Game extends Component {
     const {
       isStart,
       isPop,
-      quiz,
+      noticeMsg,
+      clickOutside,
       placeholder,
       playerStep,
       isLock,
       tilesList,
-      photographerProfile,
-      photographer,
     } = this.state;
+    const { quiz, photographerProfile, photographer } = this.props;
     return (
       <div className='game'>
         <div className='game-info'>
@@ -310,10 +295,25 @@ class Game extends Component {
           </a>
         </p>
         <Start isStart={isStart} clickStart={this.clickStart} />
-        <Popup isPop={isPop} toggleIsPop={this.toggleIsPop} />
+        <Popup
+          isPop={isPop}
+          noticeMsg={noticeMsg}
+          toggleIsPop={this.toggleIsPop}
+          clickOutside={clickOutside}
+        />
       </div>
     );
   }
 }
 
-export default Game;
+Game.propTypes = {
+  quiz: PropTypes.string.isRequired,
+  photographerProfile: PropTypes.string.isRequired,
+  photographer: PropTypes.string.isRequired,
+  forTest: PropTypes.func.isRequired,
+  getQuiz: PropTypes.func.isRequired,
+  clearQuiz: PropTypes.func.isRequired,
+  history: PropTypes.object.isRequired,
+};
+
+export default withRouter(Game);

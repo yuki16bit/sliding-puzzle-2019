@@ -6,13 +6,14 @@ import Notice from './Notice';
 const Overlay = PopType => {
   class Inner extends Component {
     clickOutside = e => {
+      const { toggleIsPop } = this.props;
       if (e.target.contains(this.innerRef)) {
-        this.props.toggleIsPop();
+        toggleIsPop();
       }
     };
 
     render() {
-      const { isPop } = this.props;
+      const { isPop, clickOutside } = this.props;
       return (
         <div>
           {isPop && (
@@ -23,7 +24,7 @@ const Overlay = PopType => {
               ref={node => {
                 this.innerRef = node;
               }}
-              onClick={this.clickOutside}
+              onClick={clickOutside ? this.clickOutside : null}
               onKeyUp={null}
             >
               <PopType {...this.props} />
@@ -34,9 +35,14 @@ const Overlay = PopType => {
     }
   }
 
+  Inner.defaultProps = {
+    clickOutside: false,
+  };
+
   Inner.propTypes = {
     isPop: PropTypes.bool.isRequired,
     toggleIsPop: PropTypes.func.isRequired,
+    clickOutside: PropTypes.bool,
   };
   return Inner;
 };

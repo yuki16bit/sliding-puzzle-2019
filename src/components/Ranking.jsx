@@ -1,40 +1,31 @@
 import React, { Component } from 'react';
-import db from '../Firebase';
+import PropTypes from 'prop-types';
 
 class Ranking extends Component {
-  state = {
-    ranking: [],
-  };
-
   componentDidMount() {
-    // 監聽 firestore
-    this.getRanking();
+    console.log(this.props.value.location);
   }
 
-  componentWillUnmount() {
-    // 移除監聽 firestore
-  }
-
-  getRanking = () => {
-    // firesote realtime updates
-    db.collection('ranking')
-      // .where('step', '>=', '0')
-      .onSnapshot(querySnapshot => {
-        // 在這層 setState 以解決 onSnapshot 非同步的問題。
-        const ranking = [];
-        querySnapshot.forEach(doc => {
-          const player = doc.data();
-          ranking.push({
-            name: player.name,
-            step: player.step,
-          });
-        });
-        this.setState({ ranking });
+  checkTopTen = () => {
+    const { playerStep } = this.state;
+    const { ranking } = this.props;
+    const last = ranking
+      .map(player => {
+        return player.step;
+      })
+      .reduce((acc, cur) => {
+        return Math.max(acc, cur);
       });
+    // 如果進前 10
+    if (playerStep < last) {
+      // 寫入 firestore
+    }
+    // 在圈外就何も起こらない
+    console.log(ranking, last);
   };
 
   render() {
-    const { ranking } = this.state;
+    const { ranking } = this.props;
     return (
       <div className='ranking'>
         <p>Top 10 Ranking</p>
@@ -51,5 +42,9 @@ class Ranking extends Component {
     );
   }
 }
+
+Ranking.propTypes = {
+  ranking: PropTypes.instanceOf(Array).isRequired,
+};
 
 export default Ranking;

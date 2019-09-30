@@ -1,18 +1,22 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const Notice = ({ noticeMsg }) => (
+import Loading from './Loading';
+
+const Notice = ({ noticeMsg, clickOutside }) => (
   <div className='modal notice'>
     <p>{noticeMsg}</p>
+    {!clickOutside && <Loading />}
   </div>
 );
 
 Notice.defaultProps = {
-  noticeMsg: 'Please enter your name to start the game.',
+  clickOutside: false,
 };
 
 Notice.propTypes = {
-  noticeMsg: PropTypes.string,
+  noticeMsg: PropTypes.string.isRequired,
+  clickOutside: PropTypes.bool,
 };
 
 export default Notice;
