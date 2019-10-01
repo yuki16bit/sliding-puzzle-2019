@@ -28,7 +28,7 @@ class App extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     const { combo } = this.state;
-    if(prevState.combo !== combo) {
+    if (prevState.combo !== combo) {
       setTimeout(() => {
         this.getQuiz();
       }, 1000);
@@ -44,8 +44,10 @@ class App extends Component {
   };
 
   calcCombo = () => {
-    this.setState(prevState => {return { combo: prevState + 1 }});
-  }
+    this.setState(prevState => {
+      return { combo: prevState + 1 };
+    });
+  };
 
   // 用 axios 串接 Unsplash API 取得貓咪圖片作為拼圖題目
   getQuiz = async () => {
@@ -85,7 +87,7 @@ class App extends Component {
     return (
       <div className='app'>
         <p className='app-title'>Sliding Cat (Ф∀Ф)</p>
-        <Router>
+        <Router basename='/sliding-cat'>
           <div className='nav'>
             <NavLink exact to='/' className='link' activeClassName='link-active'>
               Game
@@ -100,15 +102,13 @@ class App extends Component {
             render={() => (
               <Game
                 quiz={quiz}
-                getQuiz={this.getQuiz}
-                forTest={this.forTest}
                 calcCombo={this.calcCombo}
                 photographerProfile={photographerProfile}
                 photographer={photographer}
               />
             )}
           />
-          <Route path='/ranking' render={() => <Ranking ranking={ranking}/>} />
+          <Route path='/ranking' render={() => <Ranking ranking={ranking} />} />
         </Router>
       </div>
     );

@@ -7,54 +7,73 @@ class Ranking extends Component {
   state = {
     topTen: [],
     rankMsg: '',
-  }
+  };
 
   componentDidMount() {
     const { ranking, location } = this.props;
     if (location.state) {
-      const playerName = location.state.playerName;
-      const playerStep = location.state.playerStep;
+      const { playerName, playerStep } = location.state;
       this.checkRanking(playerName, playerStep);
     } else {
       this.sortRanking(ranking);
     }
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps) {
     const { ranking } = this.props;
-    const { topTen } = this.state;
     // ranking 有變，排順序
-    if(prevProps.ranking !== ranking && ranking.length >= 10) {
+    if (prevProps.ranking !== ranking) {
       this.sortRanking(ranking);
-      console.log(topTen);
     }
   }
 
   componentWillUnmount() {
-    // 移除監聽 firestore
+    // TODO: 移除監聽 firestore
   }
 
-  addRank = (playerName, playerStep) => {
+  deleteLast = async last => {
+    const lastRef = await db
+      .collection('ranking')
+      .where('step', '==', `${last}`)
+      .get();
+
+    const batch = db.batch();
+
+    // TODO: 有同分的刪後面那個。
+    if (lastRef.size > 1) {
+      lastRef.forEach((doc, i) => {
+        console.log(i, lastRef.size - 1);
+        if (i === parseInt(lastRef.size, 10) - 1) {
+          batch.delete(doc.ref);
+        }
+      });
+    } else {
+      lastRef.forEach(doc => {
+        batch.delete(doc.ref);
+      });
+    }
+
+    await batch.commit();
+  };
+
+  addRank = (playerName, playerStep, last) => {
     const { ranking } = this.props;
     if (ranking.length >= 10) {
       // 如果會超出 10 名刪掉最後 1 名
-      // db.collection('ranking').where('step','==',`${topTen[9].step}`).get().delete()
-      //   .then(console.log('delete last!'))
-      //   .catch( err => console.log(err))
-      console.log('超出 10 名要處理');
+      this.deleteLast(last);
     }
     db.collection('ranking').add({
       name: playerName,
-      step: playerStep
-    })
-  }
+      step: playerStep,
+    });
+  };
 
-  sortRanking = (ranking) => {
+  sortRanking = ranking => {
     const topTen = ranking.sort((a, b) => {
       return a.step - b.step;
     });
     this.setState({ topTen });
-  }
+  };
 
   checkRanking = (playerName, playerStep) => {
     const { ranking } = this.props;
@@ -68,14 +87,12 @@ class Ranking extends Component {
     // 如果進前 10
     if (playerStep < last) {
       // 寫入 firestore
-      this.addRank(playerName, playerStep);
+      this.addRank(playerName, playerStep, last);
       this.setState({ rankMsg: 'You are ranked ...!!' });
-      console.log('有前10');
     } else {
+      this.sortRanking(ranking);
       this.setState({ rankMsg: 'You are not ranking in top 10.' });
-      console.log('圈外');
     }
-    console.log(playerStep, last);
   };
 
   render() {
@@ -100,6 +117,7 @@ class Ranking extends Component {
 
 Ranking.propTypes = {
   ranking: PropTypes.instanceOf(Array).isRequired,
-}
+  location: PropTypes.object.isRequired,
+};
 
 export default withRouter(Ranking);

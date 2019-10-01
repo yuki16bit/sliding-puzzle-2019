@@ -305,8 +305,6 @@ Game.propTypes = {
   quiz: PropTypes.string.isRequired,
   photographerProfile: PropTypes.string.isRequired,
   photographer: PropTypes.string.isRequired,
-  forTest: PropTypes.func.isRequired,
-  getQuiz: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired,
 };
 
