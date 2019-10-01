@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import { HashRouter as Router, Route, NavLink } from 'react-router-dom';
+import { BrowserRouter as Router, Route, NavLink } from 'react-router-dom';
 import axios from 'axios';
 import db from './Firebase';
 
@@ -11,6 +11,7 @@ import Ranking from './components/Ranking';
 
 class App extends Component {
   state = {
+    combo: 0,
     quiz: '',
     photographer: '',
     photographerProfile: '',
@@ -18,14 +19,20 @@ class App extends Component {
   };
 
   componentDidMount() {
-    this.forTest();
-    // this.getQuiz();
     // 監聽 firestore
     this.getRanking();
+    // get 題目
+    // this.forTest();
+    this.getQuiz();
   }
 
-  componentWillUnmount() {
-    // 移除監聽 firestore
+  componentDidUpdate(prevProps, prevState) {
+    const { combo } = this.state;
+    if(prevState.combo !== combo) {
+      setTimeout(() => {
+        this.getQuiz();
+      }, 1000);
+    }
   }
 
   forTest = () => {
@@ -35,6 +42,10 @@ class App extends Component {
       });
     }, 1000);
   };
+
+  calcCombo = () => {
+    this.setState(prevState => {return { combo: prevState + 1 }});
+  }
 
   // 用 axios 串接 Unsplash API 取得貓咪圖片作為拼圖題目
   getQuiz = async () => {
@@ -51,10 +62,6 @@ class App extends Component {
     const photographerProfile = `${res.data.user.links.html}`;
     console.log(res.data);
     this.setState({ quiz, photographer, photographerProfile });
-  };
-
-  clearQuiz = () => {
-    this.setState({ quiz: '' });
   };
 
   getRanking = () => {
@@ -94,14 +101,14 @@ class App extends Component {
               <Game
                 quiz={quiz}
                 getQuiz={this.getQuiz}
-                clearQuiz={this.clearQuiz}
                 forTest={this.forTest}
+                calcCombo={this.calcCombo}
                 photographerProfile={photographerProfile}
                 photographer={photographer}
               />
             )}
           />
-          <Route path='/ranking' render={() => <Ranking ranking={ranking} />} />
+          <Route path='/ranking' render={() => <Ranking ranking={ranking}/>} />
         </Router>
       </div>
     );

@@ -113,9 +113,10 @@ class Game extends Component {
 
   checkSolved = () => {
     const { tilesList, playerName, playerStep } = this.state;
-    const { history } = this.props;
+    const { history, calcCombo } = this.props;
     const ideal = [1, 2, 3, 4, 5, 6, 7, 8, 9];
     if (tilesList.join() === ideal.join()) {
+      calcCombo();
       this.setState(
         {
           isStart: false,
@@ -130,7 +131,7 @@ class Game extends Component {
               pathname: '/ranking',
               state: { playerName, playerStep },
             });
-          }, 2000);
+          }, 1000);
         },
       );
     }
@@ -138,20 +139,13 @@ class Game extends Component {
 
   clickStart = () => {
     // 檢查有無名字，有才能玩，沒有要跳 Popup 提醒
-    const { playerName, isStart, isSolved } = this.state;
-    const { clearQuiz, forTest, getQuiz } = this.props;
+    const { playerName } = this.state;
     if (!playerName || playerName === '') {
       this.setState({
         isPop: true,
         noticeMsg: 'Please enter your name to start the game.',
       });
     } else {
-      if (!isStart && isSolved) {
-        // 初クリア後繼續玩新一局
-        clearQuiz();
-        forTest();
-        // getQuiz();
-      }
       // isStart 變 true，isSolved 要變 false
       this.setState({
         isStart: true,
@@ -229,7 +223,7 @@ class Game extends Component {
 
   changeName = e => {
     this.setState({
-      playerName: e.target.value,
+      playerName: e.target.value.toString(),
     });
   };
 
@@ -307,12 +301,12 @@ class Game extends Component {
 }
 
 Game.propTypes = {
+  calcCombo: PropTypes.func.isRequired,
   quiz: PropTypes.string.isRequired,
   photographerProfile: PropTypes.string.isRequired,
   photographer: PropTypes.string.isRequired,
   forTest: PropTypes.func.isRequired,
   getQuiz: PropTypes.func.isRequired,
-  clearQuiz: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired,
 };
 

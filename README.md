@@ -4,4 +4,4 @@
 | Technologies                        |                             |                                  |
 |:-----------------------------------:|:---------------------------:|:--------------------------------:|
 | React, React Router, Babel, Webpack | SCSS, postCSS               | ESLint + Prettier (Airbnb Style) |
-| Firebase (Firestore)                | Unsplash API                |                                  |
+| Firebase (Firestore)                | Unsplash API                | dotenv                           |

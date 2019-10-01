@@ -50,6 +50,7 @@ body {
     max-width: 90%;
     margin: 10px auto;
     height: 100px;
+    overflow:auto;
     display: grid;
     grid-template-rows: repeat(2, 1fr);
     grid-template-columns: repeat(2, 1fr);
@@ -86,8 +87,8 @@ body {
   }
 
   .quiz {
-    width: 100px;
-    height: 100px;
+    width: 98px;
+    height: 98px;
     border: 1px solid $toyama;
     border-radius: 4px;
     background-size: 100%;
