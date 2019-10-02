@@ -32,6 +32,8 @@ body {
 
     .link {
       color: $akisora;
+      display: inline-block;
+      margin-right: 10px;
     }
     .link-active {
       color: $ki;
@@ -138,6 +140,10 @@ $positions: ('top left', 'top center', 'top right', 'center left', 'center', 'ce
   display: grid;
   grid-template-columns: 1fr;
   gap: 5px;
+
+  p {
+    margin: 0;
+  }
 
   .ranking-player {
     display: grid;

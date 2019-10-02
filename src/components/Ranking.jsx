@@ -1,29 +1,28 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
-import db from '../Firebase';
+import { db, firebase } from '../Firebase';
 
 class Ranking extends Component {
   state = {
-    topTen: [],
     rankMsg: '',
   };
 
   componentDidMount() {
-    const { ranking, location } = this.props;
+    const { location } = this.props;
     if (location.state) {
-      const { playerName, playerStep } = location.state;
-      this.checkRanking(playerName, playerStep);
-    } else {
-      this.sortRanking(ranking);
+      const { playerName, playerStepNum } = location.state;
+      this.checkRanking(playerName, playerStepNum);
     }
   }
 
   componentDidUpdate(prevProps) {
     const { ranking } = this.props;
-    // ranking 有變，排順序
     if (prevProps.ranking !== ranking) {
-      this.sortRanking(ranking);
+      if (ranking.length > 10) {
+        // 超出 10 名，刪掉最後一名
+        this.deleteLast();
+      }
     }
   }
 
@@ -31,76 +30,56 @@ class Ranking extends Component {
     // TODO: 移除監聽 firestore
   }
 
-  deleteLast = async last => {
+  deleteLast = async () => {
+    const { ranking } = this.props;
+    const last = ranking[ranking.length - 1];
     const lastRef = await db
       .collection('ranking')
-      .where('step', '==', `${last}`)
+      .where('step', '==', `${last.step}`)
       .get();
 
     const batch = db.batch();
 
-    // TODO: 有同分的刪後面那個。
     if (lastRef.size > 1) {
-      lastRef.forEach((doc, i) => {
-        console.log(i, lastRef.size - 1);
-        if (i === parseInt(lastRef.size, 10) - 1) {
-          batch.delete(doc.ref);
-        }
-      });
+      // TODO: 有同分的人，要刪掉慢到的
+      console.log(lastRef);
     } else {
       lastRef.forEach(doc => {
         batch.delete(doc.ref);
       });
     }
-
     await batch.commit();
   };
 
-  addRank = (playerName, playerStep, last) => {
-    const { ranking } = this.props;
-    if (ranking.length >= 10) {
-      // 如果會超出 10 名刪掉最後 1 名
-      this.deleteLast(last);
-    }
+  addRank = (playerName, playerStepNum) => {
     db.collection('ranking').add({
       name: playerName,
-      step: playerStep,
+      step: playerStepNum,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
     });
   };
 
-  sortRanking = ranking => {
-    const topTen = ranking.sort((a, b) => {
-      return a.step - b.step;
-    });
-    this.setState({ topTen });
-  };
-
-  checkRanking = (playerName, playerStep) => {
+  checkRanking = (playerName, playerStepNum) => {
     const { ranking } = this.props;
-    const last = ranking
-      .map(player => {
-        return player.step;
-      })
-      .reduce((acc, cur) => {
-        return Math.max(acc, cur);
-      });
+    const last = ranking[ranking.length - 1];
     // 如果進前 10
-    if (playerStep < last) {
+    if (playerStepNum < last.step) {
       // 寫入 firestore
-      this.addRank(playerName, playerStep, last);
-      this.setState({ rankMsg: 'You are ranked ...!!' });
+      this.addRank(playerName, playerStepNum);
+      this.setState({ rankMsg: 'You are one of the top 10 ...!!' });
     } else {
-      this.sortRanking(ranking);
       this.setState({ rankMsg: 'You are not ranking in top 10.' });
     }
   };
 
   render() {
-    const { topTen, rankMsg } = this.state;
+    const { rankMsg } = this.state;
+    const { ranking } = this.props;
     return (
       <div className='ranking'>
-        <p>Top 10 Ranking {rankMsg}</p>
-        {topTen.map((rank, i) => {
+        {/* <p>Top 10 Ranking</p> */}
+        <p>{rankMsg}</p>
+        {ranking.map((rank, i) => {
           return (
             <div key={i} className='ranking-player'>
               <div className='ranking-rank'>{i + 1}</div>

@@ -127,9 +127,10 @@ class Game extends Component {
         },
         () => {
           setTimeout(() => {
+            const playerStepNum = parseInt(playerStep, 10);
             history.push({
               pathname: '/ranking',
-              state: { playerName, playerStep },
+              state: { playerName, playerStepNum },
             });
           }, 1000);
         },

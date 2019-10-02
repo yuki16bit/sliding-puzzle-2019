@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Route, NavLink } from 'react-router-dom';
 import axios from 'axios';
-import db from './Firebase';
+import { db } from './Firebase';
 
 import './App.scss';
 
@@ -69,18 +69,21 @@ class App extends Component {
 
   getRanking = () => {
     // firesote realtime updates
-    db.collection('ranking').onSnapshot(querySnapshot => {
-      // 在這層 setState 以解決 onSnapshot 非同步的問題。
-      const ranking = [];
-      querySnapshot.forEach(doc => {
-        const player = doc.data();
-        ranking.push({
-          name: player.name,
-          step: player.step,
+    db.collection('ranking')
+      .orderBy('step', 'asc')
+      .orderBy('createdAt', 'asc')
+      .onSnapshot(querySnapshot => {
+        // 在這層 setState 以解決 onSnapshot 非同步的問題。
+        const ranking = [];
+        querySnapshot.forEach(doc => {
+          const player = doc.data();
+          ranking.push({
+            name: player.name,
+            step: player.step,
+          });
         });
+        this.setState({ ranking });
       });
-      this.setState({ ranking });
-    });
   };
 
   render() {
