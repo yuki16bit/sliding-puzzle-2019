@@ -22,16 +22,16 @@ class App extends Component {
     // 監聽 firestore
     this.getRanking();
     // get 題目
-    this.forTest();
-    // this.getQuiz();
+    // this.forTest();
+    this.getQuiz();
   }
 
   componentDidUpdate(prevProps, prevState) {
     const { combo } = this.state;
     if (prevState.combo !== combo) {
       setTimeout(() => {
-        this.forTest();
-        // this.getQuiz();
+        // this.forTest();
+        this.getQuiz();
       }, 1000);
     }
   }
