@@ -44,7 +44,7 @@ body {
   margin: auto;
   background-color: $akisora;
   border-radius: 4px;
-  overflow:auto;
+  overflow: auto;
 
   .game-info {
     width: 90%;
@@ -131,6 +131,38 @@ $positions: ('top left', 'top center', 'top right', 'center left', 'center', 'ce
   }
 }
 
+.ranking {
+  width: 300px;
+  margin: auto;
+  overflow: auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 5px;
+
+  .ranking-player {
+    display: grid;
+    grid-template-columns: 30px auto 70px;
+    gap: 0;
+    border-radius: 4px;
+    text-align: center;
+    overflow: hidden;
+    color: $ki;
+
+    div {
+      background-color: $akisora;
+    }
+    // .ranking-rank {
+
+    // }
+    .ranking-name {
+      margin: 0 5px;
+    }
+    // .ranking-step {
+
+    // }
+  }
+}
+
 .start {
   width: 80px;
   margin: 10px auto;
@@ -169,11 +201,6 @@ $positions: ('top left', 'top center', 'top right', 'center left', 'center', 'ce
       margin: 0;
     }
   }
-}
-
-.ranking {
-  width: 300px;
-  margin: auto;
 }
 
 .loading {

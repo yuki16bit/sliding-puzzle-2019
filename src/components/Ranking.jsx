@@ -99,15 +99,14 @@ class Ranking extends Component {
     const { topTen, rankMsg } = this.state;
     return (
       <div className='ranking'>
-        <p>Top 10 Ranking</p>
-        <p>{rankMsg}</p>
+        <p>Top 10 Ranking {rankMsg}</p>
         {topTen.map((rank, i) => {
           return (
-            <dl key={i}>
-              <dt>{i + 1}</dt>
-              <dd>{rank.name}</dd>
-              <dd>{rank.step}</dd>
-            </dl>
+            <div key={i} className='ranking-player'>
+              <div className='ranking-rank'>{i + 1}</div>
+              <div className='ranking-name'>{rank.name}</div>
+              <div className='ranking-step'>{rank.step}</div>
+            </div>
           );
         })}
       </div>
