@@ -87,6 +87,7 @@ class App extends Component {
   };
 
   render() {
+    // TODO: 各種動畫效果
     const { quiz, photographerProfile, photographer, ranking } = this.state;
     return (
       <div className='app'>
