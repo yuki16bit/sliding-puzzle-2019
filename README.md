@@ -1,4 +1,4 @@
-### Sliding Puzzle
+### Sliding Puzzle 2019
 
 - AppWorks School 2019 spring web class (front-end) midterm exam
 - I have ceased maintenance of this repository, so the live demo will no longer be available
