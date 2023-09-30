@@ -1,14 +1,14 @@
-### Sliding Puzzle 2019
+#### Sliding Puzzle 2019
 
 - AppWorks School 2019 spring web class (front-end) midterm exam
 - I have ceased maintenance of this repository, so the live demo will no longer be available
 
-### Backend Tech Stack
+#### Backend Tech Stack
 
 - Google Firebase (Firestore)
 - Unsplash API
 
-### Front-End Tech Stack
+#### Front-End Tech Stack
 
 - React.js (class component)
 - React Router
@@ -16,7 +16,7 @@
 - ESLint + Prettier (Airbnb style)
 - Babel + Webpack (without Create React App or any other framework) 
 
-### Version Control
+#### Version Control
 
 - Git / Github
 - GUI: Fork
