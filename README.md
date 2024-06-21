@@ -1,6 +1,6 @@
 #### Sliding Puzzle 2019
 - AppWorks School 2019 spring web class (front-end) midterm exam
-- This repository is no longer maintained, no live demo is available
+- This project is no longer maintained, no live demo is available
 
 #### Front-end Tech Stack
 - React.js (class component)
